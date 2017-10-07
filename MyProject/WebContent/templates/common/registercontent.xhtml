@@ -1,0 +1,101 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+
+
+<h:form>
+	<div class="jumbotron">
+		<div class="container">
+			<fieldset>
+				<legend>Inscription d'un nouvel utilisateur</legend>
+				<h:panelGrid columns="3">
+					<h:outputLabel for="nom">Nom <span class="requis">*</span>
+					</h:outputLabel>
+					<p:inputText id="nom" value="#{userDetailsService.collab.nom}"
+						required="true" size="20" maxlength="20"
+						requiredMessage="Veuillez saisir un login" />
+					<h:message for="nom" style="color:red" />
+
+					<h:outputLabel for="prenom">Prénom <span
+							class="requis">*</span>
+					</h:outputLabel>
+					<p:inputText id="prenom"
+						value="#{userDetailsService.collab.prenom}" required="true"
+						size="20" maxlength="20"
+						requiredMessage="Veuillez saisir un login" />
+					<h:message for="prenom" style="color:red" />
+
+					<h:outputLabel for="dateNaiss">Date de Naissance <span
+							class="requis">*</span>
+					</h:outputLabel>
+					<p:calendar value="#{userDetailsService.collab.dateNaiss}"
+						pattern="MM/dd/yyyy" widgetVar="cal">
+						<f:converter converterId="timestampConverter" />
+					</p:calendar>
+					<h:message for="dateNaiss" style="color:red" />
+
+					<h:outputLabel for="sexe">Sexe <span class="requis">*</span>
+					</h:outputLabel>
+					<p:selectOneRadio id="sexe"
+						value="#{userDetailsService.collab.sexe}">
+						<f:selectItem itemLabel="Homme" itemValue="0" />
+						<f:selectItem itemLabel="Femme" itemValue="1" />
+					</p:selectOneRadio>
+					<h:message for="sexe" style="color:red" />
+
+					<h:outputLabel for="username">Login <span
+							class="requis">*</span>
+					</h:outputLabel>
+					<p:inputText id="username"
+						value="#{userDetailsService.user.username}" required="true"
+						size="20" maxlength="20"
+						requiredMessage="Veuillez saisir un login" />
+					<h:message for="username" style="color:red" />
+
+					<h:outputLabel for="password">Mot de passe <span
+							class="requis">*</span>
+					</h:outputLabel>
+					<p:password id="motdepasse"
+						value="#{userDetailsService.user.password}"
+						binding="#{composantMotDePasse}" size="20" maxlength="20"
+						required="true" requiredMessage="Veuillez saisir un mot de passe"
+						promptLabel="Veuillez saisir un mot de passe" weakLabel="Faible"
+						goodLabel="Bien" strongLabel="Excellent" inline="false"
+						feedback="true">
+
+						<f:ajax event="blur" execute="motdepasse confirmation"
+							render="motDePasseMessage confirmationMessage" />
+					</p:password>
+					<h:message for="password" style="color:red" />
+
+					<h:outputLabel for="passwordConfirm">Confirmation du mot de passe <span
+							class="requis">*</span>
+					</h:outputLabel>
+					<p:password id="confirmation"
+						value="#{userDetailsService.user.passwordConfirm}" size="20"
+						maxlength="20" required="true"
+						requiredMessage="Veuillez confirmer votre mot de passe">
+						<f:validator validatorId="confirmationMotDePasseValidator" />
+						<f:attribute name="composantMotDePasse"
+							value="#{composantMotDePasse}" />
+						<f:ajax event="blur" execute="motdepasse confirmation"
+							render="motDePasseMessage confirmationMessage" />
+					</p:password>
+					<h:message for="passwordConfirm" style="color:red" />
+
+					<p:messages globalOnly="true" infoClass="info" />
+					<p:commandButton value="Inscription"
+						action="#{userDetailsService.register}" styleClass="sansLabel"
+						title="Enregistrer" />
+
+				</h:panelGrid>
+			</fieldset>
+		</div>
+	</div>
+</h:form>
+</html>

@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core">
+<h:head>
+	<title>Gestion des utilisateurs</title>
+	<h:head>
+		<h:outputStylesheet library="css" name="table-style.css" />
+	</h:head>
+</h:head>
+<h:body>
+	<a style="color: #FF0000" href="#{request.contextPath}/login.xhtml">Retour à l'acceuil</a><br/><br/>
+	<h:form>
+		<fieldset>
+			<legend>Inscription d'un nouvel utilisateur</legend>
+			<h:panelGrid columns="3">
+				<h:outputLabel for="username">Login <span class="requis">*</span> </h:outputLabel>
+				<h:inputText id="username" value="#{userDetailsService.user.username}" required="true" size="20" maxlength="20" requiredMessage="Veuillez saisir un login"/>
+				<h:message for="username" style="color:red"/>
+
+				<h:outputLabel for="password">Mot de passe <span class="requis">*</span></h:outputLabel>
+				<h:inputSecret id="motdepasse" value="#{userDetailsService.user.password}" binding="#{composantMotDePasse}" size="20" maxlength="20" required="true"  requiredMessage="Veuillez saisir un mot de passe">
+				    <f:ajax event="blur" execute="motdepasse confirmation" render="motDePasseMessage confirmationMessage" />
+				</h:inputSecret>
+				<h:message for="password" style="color:red"/>
+				
+				<h:outputLabel for="passwordConfirm">Confirmation du mot de passe <span class="requis">*</span> </h:outputLabel>
+				<h:inputSecret id="confirmation" value="#{userDetailsService.user.passwordConfirm}" size="20" maxlength="20" required="true" requiredMessage="Veuillez confirmer votre mot de passe">
+				    <f:validator validatorId="confirmationMotDePasseValidator" />
+				    <f:attribute name="composantMotDePasse" value="#{composantMotDePasse}" /> 
+				    <f:ajax event="blur" execute="motdepasse confirmation" render="motDePasseMessage confirmationMessage" />
+				</h:inputSecret>
+				<h:message for="passwordConfirm" style="color:red"/>
+
+				<h:outputLabel for="nom">Actif</h:outputLabel>
+				<h:selectBooleanCheckbox id="enabled" value="#{userDetailsService.user.enabled}" />
+
+				<h:messages globalOnly="true" infoClass="info" />
+				<h:commandButton value="Inscription" action="#{userDetailsService.addUser}" styleClass="sansLabel" title = "Ajouter un utilisateur"/>
+
+			</h:panelGrid>
+		</fieldset>
+	</h:form>
+
+	<h:form>
+		<h2>Liste des utilisateurs</h2>
+		<h:dataTable value="#{userDetailsService.userList}" var="o" styleClass="user-table" 
+		headerClass="user-table-header" rowClasses="user-table-odd-row,user-table-even-row">
+
+			<h:column>
+				<f:facet name="header">Login</f:facet>
+				<h:outputText value="#{o.username}" />
+			</h:column>
+
+			<h:column>
+				<f:facet name="header">
+					<h:outputText value="Actif"/>
+				</f:facet>
+				<h:selectBooleanCheckbox value="#{o.enabled}" />
+			</h:column>
+
+			<h:column>
+				<f:facet name="header">Suppression</f:facet>
+				 <h:commandLink action = "#{userDetailsService.deleteAction(o)}" immediate = "true">
+                 	<h:graphicImage url = "/images/supprimer.png" title = "Supprimer"/>
+				 </h:commandLink>
+			</h:column>
+
+		</h:dataTable>
+		
+		<h:commandButton value="Mettre à jours" action="#{userDetailsService.updateList}"/>
+	</h:form>
+
+</h:body>
+</html>
